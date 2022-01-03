@@ -6,7 +6,7 @@ plugins {
 
 group = 'com.example'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '1.8'
 
 configurations {
 	compileOnly {
@@ -16,6 +16,12 @@ configurations {
 
 repositories {
 	mavenCentral()
+	//maven { url 'http://70.121.224.52:8081/nexus/content/repositories/central/' }
+    //maven { url 'http://70.121.224.52:8081/nexus/content/groups/public-snapshot-repositories/' }
+    //maven { url 'http://70.121.224.52:8081/nexus/content/groups/public/' }
+    //maven { url 'http://70.121.224.52:8081/nexus/content/repositories/anyframe-3rd-party/' }
+    //maven { url 'http://70.121.224.52:8081/repository/cmp-releases/' }
+    //jcenter { url 'http://70.121.224.52:8081/nexus/content/repositories/jcenter/' }
 }
 
 dependencies {
