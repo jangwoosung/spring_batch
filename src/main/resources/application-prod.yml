@@ -1,0 +1,1 @@
+spring:  config:    activate:      on-profile: prod  datasource:    hikari:      jdbc-url:       username: sa      password:       driver-class-name: org.h2.Driver

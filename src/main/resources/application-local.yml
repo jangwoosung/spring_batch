@@ -1,0 +1,14 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    hikari:
+      jdbc-url: jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      username: sa
+      password: 
+      driver-class-name: org.h2.Driver      
+  batch:
+    jdbc:
+      initialize-schema: always  #always : 항상 실행(테이블자동생성), embeded : 기본설정(내장db실행 테이블생성안됨), never: 수동 실행
+      
