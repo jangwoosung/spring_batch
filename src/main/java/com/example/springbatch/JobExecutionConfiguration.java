@@ -36,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class JobParamterConfiguration {
+public class JobExecutionConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -55,7 +55,8 @@ public class JobParamterConfiguration {
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 				System.out.println("step2 was executed");
-				return RepeatStatus.FINISHED;
+				throw new RuntimeException("step2 has failed");
+//				return RepeatStatus.FINISHED;
 			}
 		})
 		.build();
@@ -66,20 +67,6 @@ public class JobParamterConfiguration {
 		return stepBuilderFactory.get("step1").tasklet(new Tasklet() {
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-
-				// StepContribution을 이용한 jobParameters 값 추출
-				// JobParameters jobParamteres = new JobParametersBuilder() 통해 입력한 값 받기
-				JobParameters jobParameters = contribution.getStepExecution().getJobParameters();
-				jobParameters.getString("name");
-				jobParameters.getLong("seq");
-				jobParameters.getDate("date");
-				jobParameters.getDouble("age");
-
-				// ChunkContext을 이용한 jobParameters 값 추출
-				// JobParameters jobParamteres = new JobParametersBuilder() 통해 입력한 값 받기
-				Map<String, Object> jobParamterMaps = chunkContext.getStepContext().getJobParameters();
-
-
 				System.out.println("step1 was executed");
 				return RepeatStatus.FINISHED;
 			}
