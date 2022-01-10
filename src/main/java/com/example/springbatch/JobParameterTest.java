@@ -1,12 +1,14 @@
 /*******************************************************************************
  * created by        : jws
- * creation date     : 2022-01-04
+ * creation date     : 2022-01-10
  *
  * Copyright (c) 2021 Samsung SDS.
  * All rights reserved.
  *******************************************************************************/
 
 package com.example.springbatch;
+
+import java.util.Date;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.JobParameters;
@@ -22,25 +24,26 @@ import lombok.RequiredArgsConstructor;
  * Class description
  *
  * @author jws
- * @since 2022. 1. 4
+ * @since 2022. 1. 10
  * @version 1.0
 */
 
-@RequiredArgsConstructor
 @Component
-public class JobRunner implements ApplicationRunner {
+@RequiredArgsConstructor
+public class JobParameterTest implements ApplicationRunner {
 
-	private final JobLauncher jobLauncher; // 스프링배치가 초기화될때 이미 bean 생성 되어 있음
-	private final Job job; // 우리가 만든 Job을 의존성받아옴
+	private final JobLauncher jobLauncher;
+	private final Job job;
 
 	@Override
 	public void run(ApplicationArguments args) throws Exception {
+		JobParameters jobParamteres = new JobParametersBuilder()
+			.addString("name", "user1")
+			.addLong("seq", 2L)
+			.addDate("date", new Date())
+			.addDouble("age", 16.5D)
+			.toJobParameters();
 
-		JobParameters jobParameters = new JobParametersBuilder()
-				.addString("name", "user2")
-				.toJobParameters();
-
-		jobLauncher.run(job, jobParameters);
+		jobLauncher.run(job, jobParamteres);
 	}
-
 }

@@ -8,7 +8,11 @@
 
 package com.example.springbatch;
 
+import java.util.Map;
+
 import org.springframework.batch.core.Job;
+import org.springframework.batch.core.JobParameters;
+import org.springframework.batch.core.JobParametersBuilder;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
@@ -32,7 +36,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class JobInstanceConfiguration {
+public class JobParamterConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -62,6 +66,20 @@ public class JobInstanceConfiguration {
 		return stepBuilderFactory.get("step1").tasklet(new Tasklet() {
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+
+				// StepContribution을 이용한 jobParameters 값 추출
+				// JobParameters jobParamteres = new JobParametersBuilder() 통해 입력한 값 받기
+				JobParameters jobParameters = contribution.getStepExecution().getJobParameters();
+				jobParameters.getString("name");
+				jobParameters.getLong("seq");
+				jobParameters.getDate("date");
+				jobParameters.getDouble("age");
+
+				// ChunkContext을 이용한 jobParameters 값 추출
+				// JobParameters jobParamteres = new JobParametersBuilder() 통해 입력한 값 받기
+				Map<String, Object> jobParamterMaps = chunkContext.getStepContext().getJobParameters();
+
+
 				System.out.println("step1 was executed");
 				return RepeatStatus.FINISHED;
 			}
