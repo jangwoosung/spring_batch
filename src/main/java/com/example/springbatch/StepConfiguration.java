@@ -36,10 +36,11 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class JobExecutionConfiguration {
+public class StepConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	private final CustomTasklet customTasklet;
 
 	@Bean
 	public Job job() {
@@ -55,8 +56,7 @@ public class JobExecutionConfiguration {
 			@Override
 			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
 				System.out.println("step2 was executed");
-				throw new RuntimeException("step2 has failed");
-//				return RepeatStatus.FINISHED;
+				return RepeatStatus.FINISHED;
 			}
 		})
 		.build();
@@ -64,13 +64,9 @@ public class JobExecutionConfiguration {
 
 	@Bean
 	public Step step1() {
-		return stepBuilderFactory.get("step1").tasklet(new Tasklet() {
-			@Override
-			public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
-				System.out.println("step1 was executed");
-				return RepeatStatus.FINISHED;
-			}
-		})
-		.build();
+		return stepBuilderFactory.get("step1")
+				.tasklet(customTasklet)
+//				.tasklet(new CustomTasklet())
+				.build();
 	}
 }
