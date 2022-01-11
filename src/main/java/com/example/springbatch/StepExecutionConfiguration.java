@@ -36,11 +36,10 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class StepConfiguration {
+public class StepExecutionConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private final CustomTasklet customTasklet;
 
 	@Bean
 	public Job job() {
@@ -65,8 +64,13 @@ public class StepConfiguration {
 	@Bean
 	public Step step1() {
 		return stepBuilderFactory.get("step1")
-				.tasklet(customTasklet)
-//				.tasklet(new CustomTasklet())
+				.tasklet(new Tasklet() {
+					@Override
+					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+						System.out.println("step1 was executed");
+						return RepeatStatus.FINISHED;
+					}
+				})
 				.build();
 	}
 }
