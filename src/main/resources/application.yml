@@ -1,1 +1,1 @@
-#기본 환경 및 공통 설정spring:  profiles:    group:      local: local, common       dev: dev, common      prod: prod, common    active: local         server:  port: 7307  tomcat:    uri-encoding: UTF-8
+#기본 환경 및 공통 설정spring:  profiles:    group:      local: local, common       dev: dev, common      prod: prod, common    active: local         server:  port: 7307  tomcat:    uri-encoding: UTF-8logging:  level:    root: INFO
