@@ -8,16 +8,12 @@
 
 package com.example.springbatch;
 
-import java.util.Map;
-
 import org.springframework.batch.core.Job;
-import org.springframework.batch.core.JobParameters;
-import org.springframework.batch.core.JobParametersBuilder;
+import org.springframework.batch.core.JobExecutionListener;
 import org.springframework.batch.core.Step;
 import org.springframework.batch.core.StepContribution;
 import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
-import org.springframework.batch.core.job.flow.JobExecutionDecider;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
 import org.springframework.batch.repeat.RepeatStatus;
@@ -36,16 +32,18 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class StepContributionConfiguration {
+public class JobRepositoryConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
+	private final JobExecutionListener jobExecutionListener;
 
 	@Bean
 	public Job job() {
 		return jobBuilderFactory.get("job")
 				.start(step1())
 				.next(step2())
+				.listener(jobExecutionListener)
 				.build();
 	}
 
