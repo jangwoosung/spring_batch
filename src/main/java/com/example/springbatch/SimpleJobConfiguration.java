@@ -55,6 +55,9 @@ public class SimpleJobConfiguration {
 				//.validator(new CustomJobParametersValidator())
 				// DefaultJobParametersValidator
 				//.validator(new DefaultJobParametersValidator(new String[] {"name","date"},  new String[] {"count"}))
+				// CustomJobParametersIncrementer()
+				//.incrementer(new CustomJobParametersIncrementer())
+				.incrementer(new RunIdIncrementer())
 				.preventRestart()
 				.build();
 	}
