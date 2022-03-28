@@ -26,6 +26,8 @@ import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
+import org.postgresql.shaded.com.ongres.scram.common.bouncycastle.pbkdf2.RuntimeCryptoException;
+
 import lombok.RequiredArgsConstructor;
 
 /**
@@ -38,7 +40,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class TaskletConfiguration {
+public class Limit_AllowConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -62,13 +64,22 @@ public class TaskletConfiguration {
 						return RepeatStatus.FINISHED;
 					}
 				})
+				.allowStartIfComplete(true) // step1이 성공해도 true 옵션때문에 무조건 실행 됨
 				.build();
 	}
 
 	@Bean
 	public Step step2() {
 		return stepBuilderFactory.get("step2")
-				.tasklet(new CustomTasklet())
+				.tasklet(new Tasklet() {
+					@Override
+					public RepeatStatus execute(StepContribution contribution, ChunkContext chunkContext) throws Exception {
+						System.out.println("step2 was executed");
+						throw new RuntimeCryptoException("step2 was failed");
+//						return RepeatStatus.FINISHED;
+					}
+				})
+				.startLimit(3) // 3번까지 step이 실행이 됨, 4번째 부터는 오류 발생
 				.build();
 	}
 
