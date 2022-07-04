@@ -11,6 +11,5 @@ spring:
   batch:
     jdbc:
       initialize-schema: always  #always : 항상 실행(테이블자동생성), embeded : 기본설정(내장db실행 테이블생성안됨), never: 수동 실행
-#    job:
-#      enabled: false        #Job 자동실행 막기(simpleJob 기본시작 막는듯)   
-      
+    job:
+      enabled: true        #Job 자동실행 막기(simpleJob 기본시작 막는듯), #false로 지정시 @RequestMapping으로 호출가능함      

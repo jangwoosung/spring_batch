@@ -17,14 +17,15 @@ import org.springframework.batch.core.configuration.annotation.JobBuilderFactory
 import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.scope.context.ChunkContext;
 import org.springframework.batch.core.step.tasklet.Tasklet;
-import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.item.file.FlatFileItemReader;
 import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.batch.item.file.mapping.BeanWrapperFieldSetMapper;
+import org.springframework.batch.item.file.transform.Range;
 import org.springframework.batch.repeat.RepeatStatus;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.FileSystemResource;
 
 import lombok.RequiredArgsConstructor;
 
@@ -64,7 +65,7 @@ public class FlatFileConfiguration {
 				.build();
 	}
 
-	// custom api
+	// custom api(DelimetedLineTokenLizer)
 //	@Bean
 //	public ItemReader itemReader() {
 //
@@ -82,17 +83,33 @@ public class FlatFileConfiguration {
 //		return itemReader;
 //	}
 
-	// spring에서 제공하는 api
+	// spring에서 제공하는 api(DelimetedLineTokenLizer)
+//	@Bean
+//	public ItemReader itemReader() {
+//		return new FlatFileItemReaderBuilder<Customer>()
+//				.name("flatFile")
+//				.resource(new ClassPathResource("/customer.csv"))
+////				.fieldSetMapper(new CustomerFieldSetMapper())
+//				.fieldSetMapper(new BeanWrapperFieldSetMapper<>())
+//				.targetType(Customer.class)
+//				.linesToSkip(1)
+//				.delimited().delimiter(",")
+//				.names("name", "age", "year")
+//				.build();
+//	}
+
 	@Bean
-	public ItemReader itemReader() {
+	public FlatFileItemReader itemReader() {
 		return new FlatFileItemReaderBuilder<Customer>()
 				.name("flatFile")
-				.resource(new ClassPathResource("/customer.csv"))
-//				.fieldSetMapper(new CustomerFieldSetMapper())
+				.resource(new FileSystemResource("D:\\spring_batch\\src\\main\\resources\\customer.txt"))
 				.fieldSetMapper(new BeanWrapperFieldSetMapper<>())
 				.targetType(Customer.class)
 				.linesToSkip(1)
-				.delimited().delimiter(",")
+				.fixedLength()
+				.addColumns(new Range(1,4))
+				.addColumns(new Range(5,8))
+				.addColumns(new Range(9,10))
 				.names("name", "age", "year")
 				.build();
 	}
