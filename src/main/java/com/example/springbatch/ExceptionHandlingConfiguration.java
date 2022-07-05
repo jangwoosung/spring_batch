@@ -39,7 +39,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class FlatFileConfiguration {
+public class ExceptionHandlingConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -106,6 +106,7 @@ public class FlatFileConfiguration {
 				.fieldSetMapper(new BeanWrapperFieldSetMapper<>())
 				.targetType(Customer.class)
 				.linesToSkip(1)
+				.strict(false) // 엄격한 룰적용(기본값 true)
 				.fixedLength()
 				.addColumns(new Range(1,4))
 				.addColumns(new Range(5,8))
