@@ -1,10 +1,12 @@
+
+---
 spring:
   config:
     activate:
       on-profile: local
   datasource:
     hikari:
-      jdbc-url: jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
+      jdbc-url: jdbc:h2:tcp://localhost/~/test;DB_CLOSE_DELAY=-1;
       username: sa
       password: 
       driver-class-name: org.h2.Driver      
@@ -13,3 +15,18 @@ spring:
       initialize-schema: always  #always : 항상 실행(테이블자동생성), embeded : 기본설정(내장db실행 테이블생성안됨), never: 수동 실행
     job:
       enabled: true        #Job 자동실행 막기(simpleJob 기본시작 막는듯), #false로 지정시 @RequestMapping으로 호출가능함      
+---
+      
+spring:
+  config:
+    activate:
+      on-profile: local
+  datasource:
+    hikari:
+      jdbc-url: jdbc:postgresql://localhost:5432/postgres
+      username: postgres
+      password: 4991
+      driver-class-name: org.postgresql.Driver
+  batch:
+    jdbc:
+      initialize-schema: always      
