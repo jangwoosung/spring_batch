@@ -11,6 +11,7 @@ package com.example.springbatch;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.persistence.EntityManagerFactory;
 import javax.sql.DataSource;
 
 import org.springframework.batch.core.Job;
@@ -21,6 +22,7 @@ import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.ItemReader;
 import org.springframework.batch.item.ItemWriter;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
+import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.oxm.xstream.XStreamMarshaller;
@@ -37,12 +39,13 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class JdbcCursorConfiguration {
+public class JpaCursorConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
-	private int chunkSize = 2;
+	private int chunkSize = 5;
 	private final DataSource dataSource;
+	private final EntityManagerFactory entityManagerFactory;
 
 	@Bean
 	public Job job() {
@@ -64,13 +67,15 @@ public class JdbcCursorConfiguration {
 
 	@Bean
 	public ItemReader<? extends Customer> customItemReader() {
-		return new JdbcCursorItemReaderBuilder<Customer>()
-				.name("jdbcCursorItemReader")
-				.fetchSize(chunkSize)
-				.sql("select id, firstName, lastName, birthDate from customer where firstName like ? order by lastName, firstName")
-				.beanRowMapper(Customer.class)
-				.queryArguments("A%")
-				.dataSource(dataSource)
+
+		Map<String, Object> paramters = new HashMap<>();
+		paramters.put("firstname", "A%");
+
+		return new JpaCursorItemReaderBuilder<Customer>()
+				.name("jpaCursorItemReader")
+				.entityManagerFactory(entityManagerFactory)
+				.queryString("select c from Customer c where firstname like :firstname") //jpql
+				.parameterValues(paramters)
 				.build();
 	}
 
