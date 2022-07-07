@@ -26,6 +26,7 @@ import org.springframework.batch.item.database.PagingQueryProvider;
 import org.springframework.batch.item.database.builder.JdbcCursorItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JdbcPagingItemReaderBuilder;
 import org.springframework.batch.item.database.builder.JpaCursorItemReaderBuilder;
+import org.springframework.batch.item.database.builder.JpaPagingItemReaderBuilder;
 import org.springframework.batch.item.database.support.SqlPagingQueryProviderFactoryBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -45,7 +46,7 @@ import lombok.RequiredArgsConstructor;
 
 @Configuration
 @RequiredArgsConstructor
-public class JdbcPagingConfiguration {
+public class JpaPagingConfiguration {
 
 	private final JobBuilderFactory jobBuilderFactory;
 	private final StepBuilderFactory stepBuilderFactory;
@@ -77,13 +78,12 @@ public class JdbcPagingConfiguration {
 		Map<String, Object> paramters = new HashMap<>();
 		paramters.put("firstname", "A%");
 
-		return new JdbcPagingItemReaderBuilder<Customer>()
-				.name("jdbcPagingItemReader")
+		return new JpaPagingItemReaderBuilder<Customer>()
+				.name("jpaPagingItemReader")
 				.pageSize(chunkSize)
-				.dataSource(dataSource)
-				.rowMapper(new BeanPropertyRowMapper<>(Customer.class))
-				.queryProvider(createQueryProvider())
-				.parameterValues(paramters)
+				.entityManagerFactory(entityManagerFactory)
+				.pageSize(chunkSize)
+				.queryString("select c from Customer c join fetch c.address")
 				.build();
 	}
 
@@ -121,7 +121,7 @@ public class JdbcPagingConfiguration {
 	public ItemWriter<Customer> customItemWriter() {
         return items -> {
             for (Customer item : items) {
-                System.out.println(item.toString());
+                System.out.println(item.getAddress().getLocaltion());
             }
         };
     }

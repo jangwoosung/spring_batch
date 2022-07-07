@@ -11,6 +11,7 @@ package com.example.springbatch;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 import lombok.Data;
@@ -25,15 +26,15 @@ import lombok.Data;
 
 @Data
 @Entity
-public class Customer {
+public class Address {
 
 	@Id
 	@GeneratedValue
-	private Long id;
-	private String username;
-	private int age;
+	private Long Id;
+	private String localtion;
 
-	@OneToOne(mappedBy = "customer")
-	private Address address;
+	@OneToOne
+	@JoinColumn(name = "customer_id")
+	private Customer customer;
 }
 
